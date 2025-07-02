@@ -1,17 +1,17 @@
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  age: number;
+import { Card, CardContent } from "@/components/ui/card";
+
+interface UserCardProps {
+  user: User;
 }
 
-export const UserCard = ({ user }: { user: User }) => {
-  console.log("Render UserCard:", user.name);
+export function UserCard({ user }: UserCardProps) {
   return (
-    <div className="p-4 border rounded shadow">
-      <h2 className="font-semibold">{user.name}</h2>
-      <p>Email: {user.email}</p>
-      <p>Age: {user.age}</p>
-    </div>
+    <Card className="w-full shadow-md">
+      <CardContent>
+        <h2 className="text-lg font-semibold mb-2">{user.name}</h2>
+        <p className="text-sm text-muted-foreground">Email: {user.email}</p>
+        <p className="text-sm text-muted-foreground">Role: {user.role}</p>
+      </CardContent>
+    </Card>
   );
-};
+}

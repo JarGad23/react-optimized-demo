@@ -1,25 +1,55 @@
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+
 export function UserForm() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<Role>("user");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Dane zapisane!");
+    console.log("Creating user", { name, email });
   };
 
+  const onRoleChange = (value: Role) => {
+    setRole(value);
+  };
+
+  const isValid = name.trim() !== "" && email.trim() !== "";
+
   return (
-    <form onSubmit={handleSubmit} className="border p-4 rounded shadow">
-      <h3 className="font-bold mb-2">Nowy użytkownik</h3>
-      <input className="block border p-2 w-full mb-2" placeholder="Imię" />
-      <input className="block border p-2 w-full mb-2" placeholder="Email" />
-      <input
-        className="block border p-2 w-full mb-2"
-        placeholder="Wiek"
-        type="number"
+    <form onSubmit={handleSubmit} className="space-y-4 flex-1">
+      <Input
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Zapisz
-      </button>
+      <Input
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Select value={role} onValueChange={onRoleChange}>
+        <SelectTrigger className="w-full sm:w-[200px]">
+          <SelectValue placeholder="Sort by" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="user">User</SelectItem>
+          <SelectItem value="admin">Admin</SelectItem>
+          <SelectItem value="owner">Owner</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button type="submit" disabled={!isValid}>
+        Create
+      </Button>
     </form>
   );
 }
