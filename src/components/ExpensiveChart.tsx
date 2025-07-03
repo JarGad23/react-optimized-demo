@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -8,20 +9,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function generateExpensiveChartData() {
-  // Heavy computation simulation
-  const data = [];
-  for (let i = 0; i < 1000; i++) {
-    data.push({
-      name: `Point ${i}`,
-      value: Math.sin(i / 10) * 50 + 50 + Math.random() * 10,
-    });
-  }
-  return data;
-}
-
-export const ExpensiveChart = () => {
-  const data = generateExpensiveChartData();
+export const ExpensiveChart = React.memo(() => {
+  const data = useMemo(() => generateExpensiveChartData(), []);
 
   return (
     <div className="w-full h-[500px]">
@@ -40,4 +29,16 @@ export const ExpensiveChart = () => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
+
+function generateExpensiveChartData() {
+  // Heavy computation simulation
+  const data = [];
+  for (let i = 0; i < 10000; i++) {
+    data.push({
+      name: `Point ${i}`,
+      value: Math.sin(i / 10) * 50 + 50 + Math.random() * 10,
+    });
+  }
+  return data;
+}
