@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useTransition } from "react";
+import React, { Suspense, useCallback, useState, useTransition } from "react";
 import { UserList } from "./components/UserList";
 import { UserForm } from "./components/UserForm";
 import { users } from "./data/users";
@@ -11,17 +11,47 @@ const ExpensiveChart = React.lazy(() =>
 
 export const App = () => {
   const [isPending, startTransition] = useTransition();
+  const [additionalLoading, setAdditionalLoading] = useState(false);
 
-  const addUser = useCallback((name: string, email: string, role: Role) => {
-    startTransition(() => {
-      users.unshift({
-        id: Math.floor(Math.random() * 1000000),
-        name,
-        email,
-        role,
+  const addUser = useCallback(
+    async (name: string, email: string, role: Role) => {
+      setAdditionalLoading(true);
+
+      // Tworzymy Promise który się rozwiązuje po 3 sekundach
+      const delayedExecution = new Promise<void>((resolve) => {
+        startTransition(() => {
+          users.unshift({
+            id: Math.floor(Math.random() * 1000000),
+            name,
+            email,
+            role,
+          });
+
+          // Opóźnij resolve o 3 sekundy
+          setTimeout(() => {
+            resolve();
+          }, 3000);
+        });
       });
-    });
-  }, []);
+
+      await delayedExecution;
+      setAdditionalLoading(false);
+    },
+    []
+  );
+
+  const isLoading = isPending || additionalLoading;
+
+  // const addUser = useCallback((name: string, email: string, role: Role) => {
+  //   startTransition(() => {
+  //     users.unshift({
+  //       id: Math.floor(Math.random() * 1000000),
+  //       name,
+  //       email,
+  //       role,
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div className="max-w-7xl mx-auto space-y-4 pt-16 h-full bg-white px-4">
@@ -29,7 +59,7 @@ export const App = () => {
       <div className="flex flex-col xl:flex-row gap-y-4 gap-x-4">
         <div className="w-full xl:w-1/2 flex flex-col gap-y-4">
           <UserForm addUser={addUser} />
-          <UserList loadingUsers={isPending} />
+          <UserList loadingUsers={isLoading} />
         </div>
         <div className="flex-1 min-w-0">
           <Suspense
