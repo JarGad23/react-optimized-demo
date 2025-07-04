@@ -1,7 +1,6 @@
 import React, { Suspense, useCallback, useState, useTransition } from "react";
 import { UserList } from "./components/UserList";
 import { UserForm } from "./components/UserForm";
-
 import { users as initialUsers } from "./data/users";
 
 const ExpensiveChart = React.lazy(() =>

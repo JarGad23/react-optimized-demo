@@ -47,7 +47,7 @@ export const UserList = ({ loadingUsers, users }: Props) => {
         <div className="h-20 bg-gray-200 animate-pulse">Loading...</div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredUsers.map((user) => {
           return (
             <UserCard
