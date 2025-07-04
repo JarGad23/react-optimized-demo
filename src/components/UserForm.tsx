@@ -9,14 +9,23 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-export function UserForm() {
+export function UserForm({
+  addUser,
+}: {
+  addUser: (name: string, email: string, role: Role) => void;
+}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>("user");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Creating user", { name, email });
+    if (name.trim() && email.trim()) {
+      addUser(name, email, role);
+      setName("");
+      setEmail("");
+      setRole("user");
+    }
   };
 
   const onRoleChange = (value: Role) => {
@@ -26,7 +35,7 @@ export function UserForm() {
   const isValid = name.trim() !== "" && email.trim() !== "";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 flex-1">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <Input
         placeholder="Name"
         value={name}
