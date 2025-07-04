@@ -21,8 +21,8 @@ export const ExpensiveChart = React.memo(() => {
 
   useEffect(() => {
     let cancelled = false;
-    const BATCH_SIZE = 20; // Bardzo małe porcje
-    const TOTAL_POINTS = 2000; // Małe ilości danych
+    const BATCH_SIZE = 20;
+    const TOTAL_POINTS = 2000;
     const totalBatches = Math.ceil(TOTAL_POINTS / BATCH_SIZE);
 
     function generateBatch(batchIndex: number) {
@@ -31,14 +31,12 @@ export const ExpensiveChart = React.memo(() => {
         return;
       }
 
-      // Generuj tylko gdy browser ma czas
       requestIdleCallback(
         (deadline) => {
           const batchData: DataPoint[] = [];
           const startIdx = batchIndex * BATCH_SIZE;
           const endIdx = Math.min(startIdx + BATCH_SIZE, TOTAL_POINTS);
 
-          // Generuj dane tylko przez maksymalnie 5ms
           for (
             let i = startIdx;
             i < endIdx && deadline.timeRemaining() > 5;
@@ -55,7 +53,6 @@ export const ExpensiveChart = React.memo(() => {
             setCurrentBatch(batchIndex + 1);
           }
 
-          // Planuj następną partię
           generateBatch(batchIndex + 1);
         },
         { timeout: 100 }
@@ -91,7 +88,7 @@ export const ExpensiveChart = React.memo(() => {
             dataKey="value"
             stroke="#8884d8"
             dot={false}
-            isAnimationActive={false} // KLUCZOWE!
+            // isAnimationActive={false}
             strokeWidth={1}
           />
         </LineChart>

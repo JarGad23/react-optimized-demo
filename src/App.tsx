@@ -17,7 +17,6 @@ export const App = () => {
     async (name: string, email: string, role: Role) => {
       setAdditionalLoading(true);
 
-      // Tworzymy Promise który się rozwiązuje po 3 sekundach
       const delayedExecution = new Promise<void>((resolve) => {
         startTransition(() => {
           users.unshift({
@@ -27,7 +26,6 @@ export const App = () => {
             role,
           });
 
-          // Opóźnij resolve o 3 sekundy
           setTimeout(() => {
             resolve();
           }, 3000);
@@ -41,17 +39,6 @@ export const App = () => {
   );
 
   const isLoading = isPending || additionalLoading;
-
-  // const addUser = useCallback((name: string, email: string, role: Role) => {
-  //   startTransition(() => {
-  //     users.unshift({
-  //       id: Math.floor(Math.random() * 1000000),
-  //       name,
-  //       email,
-  //       role,
-  //     });
-  //   });
-  // }, []);
 
   return (
     <div className="max-w-7xl mx-auto space-y-4 pt-16 h-full bg-white px-4">

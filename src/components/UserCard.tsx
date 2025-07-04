@@ -1,12 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
 
 interface UserCardProps {
   user: User;
   isFavorite?: boolean;
   onToggleFavorite?: (id: number) => void;
 }
-
-import React from "react";
 
 const UserCardComponent = ({
   user,
