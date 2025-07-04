@@ -1,41 +1,46 @@
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
+import { Button } from "./ui/button";
 
 interface UserCardProps {
   user: User;
-  isFavorite?: boolean;
-  onToggleFavorite?: (id: number) => void;
+  onSendMessage: (msg: string, name: string) => void;
 }
 
-const UserCardComponent = ({
-  user,
-  isFavorite,
-  onToggleFavorite,
-}: UserCardProps) => {
+const UserCardComponent = ({ user, onSendMessage }: UserCardProps) => {
+  const [message, setMessage] = React.useState("");
+
+  const handleSend = React.useCallback(() => {
+    onSendMessage(message, user.name);
+    setMessage("");
+  }, [onSendMessage, message, user.name]);
+
   return (
     <Card className="w-full shadow-md">
       <CardContent>
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold">{user.name}</h2>
-          {onToggleFavorite && (
-            <button
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-semibold">{user.name}</h2>
+          </div>
+          <p className="text-sm text-muted-foreground">Email: {user.email}</p>
+          <p className="text-sm text-muted-foreground">Role: {user.role}</p>
+          <div className="flex gap-2 mt-2">
+            <input
+              className="border px-2 py-1 rounded text-sm"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Wpisz wiadomość..."
+            />
+            <Button
               type="button"
-              aria-label={
-                isFavorite ? "Usuń z ulubionych" : "Dodaj do ulubionych"
-              }
-              onClick={() => onToggleFavorite(user.id)}
-              className={
-                isFavorite
-                  ? "text-yellow-500 hover:text-yellow-600"
-                  : "text-gray-300 hover:text-yellow-400"
-              }
+              className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
+              onClick={handleSend}
+              disabled={!message.trim()}
             >
-              ★
-            </button>
-          )}
+              Send
+            </Button>
+          </div>
         </div>
-        <p className="text-sm text-muted-foreground">Email: {user.email}</p>
-        <p className="text-sm text-muted-foreground">Role: {user.role}</p>
       </CardContent>
     </Card>
   );

@@ -88,7 +88,7 @@ export const ExpensiveChart = React.memo(() => {
             dataKey="value"
             stroke="#8884d8"
             dot={false}
-            // isAnimationActive={false}
+            isAnimationActive={false}
             strokeWidth={1}
           />
         </LineChart>

@@ -1,32 +1,40 @@
 import { useState, useMemo, useCallback } from "react";
 import { FilterPanel } from "./FilterPanel";
 import { UserCard } from "./UserCard";
-import { users } from "../data/users.ts";
 
 type Props = {
   loadingUsers?: boolean;
+  users: User[];
 };
 
-export const UserList = ({ loadingUsers }: Props) => {
+export const UserList = ({ loadingUsers, users }: Props) => {
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"asc" | "desc">("asc");
-
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const toggleFavorite = useCallback((id: number) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
-    );
-  }, []);
+  const [sort, setSort] = useState<"asc" | "desc" | "default">("default");
 
   const filteredUsers = useMemo(() => {
-    return users
-      .filter((u) => u.name.toLowerCase().includes(search.toLowerCase()))
+    const filtered = users.filter((u) =>
+      u.name.toLowerCase().includes(search.toLowerCase())
+    );
+    if (sort === "default") {
+      return filtered;
+    }
+    return filtered
+      .slice()
       .sort((a, b) =>
         sort === "asc"
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name)
       );
-  }, [search, sort]);
+  }, [search, sort, users]);
+
+  const onSendMessage = useCallback(
+    (msg: string, name: string) => {
+      console.log(filteredUsers[0]);
+      console.log(`Message for ${name}: ${msg}`);
+    },
+    [filteredUsers]
+  );
+
   return (
     <>
       <FilterPanel
@@ -35,19 +43,23 @@ export const UserList = ({ loadingUsers }: Props) => {
         sort={sort}
         onSort={setSort}
       />
-      {loadingUsers && <div className="h-20 bg-red-500">Loading...</div>}
+      {loadingUsers && (
+        <div className="h-20 bg-gray-200 animate-pulse">Loading...</div>
+      )}
+
       <div className="grid grid-cols-2 gap-4">
-        {filteredUsers.map((user) => (
-          <UserCard
-            key={user.id}
-            user={{
-              ...user,
-              role: user.role as Role,
-            }}
-            isFavorite={favorites.includes(user.id)}
-            onToggleFavorite={toggleFavorite}
-          />
-        ))}
+        {filteredUsers.map((user) => {
+          return (
+            <UserCard
+              key={user.id}
+              user={{
+                ...user,
+                role: user.role as Role,
+              }}
+              onSendMessage={onSendMessage}
+            />
+          );
+        })}
       </div>
     </>
   );
